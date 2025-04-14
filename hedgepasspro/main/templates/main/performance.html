@@ -1,0 +1,233 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Performance Analytics - HedgePassPro{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+<style>
+    /* Add all necessary CSS here to prevent missing styles */
+    .positive { color: #22c55e; }
+    .negative { color: #ef4444; }
+    .chart-container {
+        width: 100%;
+        height: 400px;
+        margin: 20px 0;
+    }
+    .performance-dashboard {
+        display: grid;
+        gap: 2rem;
+    }
+    .comparison-table {
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    th {
+        background-color: #f8fafc;
+    }
+    .alert-warning {
+        background-color: #fffbeb;
+        border-left: 4px solid #f59e0b;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    .text-center {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block header %}
+<header>
+    <div class="container">
+        <h1><i class="fas fa-chart-line"></i> Performance Analytics</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'client_area' %}" class="button"><i class="fas fa-arrow-left"></i> Back</a></li>
+                <li><button id="exportBtn" class="button"><i class="fas fa-download"></i> Export</button></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="performance-dashboard">
+        {% if pair %}
+        <section class="summary-overview">
+            <h2>📊 Summary Overview</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Live Account</th>
+                            <th>Hedge Account</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Profit/Loss</td>
+                            <td class="{% if live_pl >= 0 %}positive{% else %}negative{% endif %}">
+                                ${{ live_pl|default:"0.00"|floatformat:2 }}
+                            </td>
+                            <td class="{% if hedge_pl >= 0 %}positive{% else %}negative{% endif %}">
+                                ${{ hedge_pl|default:"0.00"|floatformat:2 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Daily P/L</td>
+                            <td class="{% if live_daily_pl >= 0 %}positive{% else %}negative{% endif %}">
+                                ${{ live_daily_pl|default:"0.00"|floatformat:2 }}
+                            </td>
+                            <td class="{% if hedge_daily_pl >= 0 %}positive{% else %}negative{% endif %}">
+                                ${{ hedge_daily_pl|default:"0.00"|floatformat:2 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Win Rate</td>
+                            <td>{{ live_win_rate|default:"0.0"|floatformat:1 }}%</td>
+                            <td>{{ hedge_win_rate|default:"0.0"|floatformat:1 }}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="charts-section">
+            <div class="chart-container">
+                <h3>Equity Curve</h3>
+                <canvas id="equityChart"></canvas>
+            </div>
+        </section>
+
+        <section class="active-trades">
+            <h2>🔄 Active Trades</h2>
+            <div class="trades-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Entry</th>
+                            <th>Current</th>
+                            <th>P/L</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if active_trades %}
+                            {% for trade in active_trades %}
+                            <tr>
+                                <td>{{ trade.symbol|default:"-" }}</td>
+                                <td>{{ trade.type|default:"-" }}</td>
+                                <td>{{ trade.size|default:"-" }}</td>
+                                <td>{{ trade.entry_price|default:"-"|floatformat:5 }}</td>
+                                <td>{{ trade.current_price|default:"-"|floatformat:5 }}</td>
+                                <td class="{% if trade.profit >= 0 %}positive{% else %}negative{% endif %}">
+                                    ${{ trade.profit|default:"0.00"|floatformat:2 }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">No active trades</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% else %}
+        <div class="alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            No account pair selected. <a href="{% url 'client-area' %}">Return to dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Export button functionality
+    var exportBtn = document.getElementById('exportBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function() {
+            alert('Export functionality will be implemented soon');
+        });
+    }
+
+    // Initialize chart only if elements exist
+    var equityChartEl = document.getElementById('equityChart');
+    if (equityChartEl) {
+        var ctx = equityChartEl.getContext('2d');
+        
+        // Default chart data if not provided by backend
+        var chartData = {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+            datasets: [
+                {
+                    label: 'Live Account',
+                    data: [52000, 52450, 53120, 52890, 53450],
+                    borderColor: '#22c55e',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Hedge Account',
+                    data: [26500, 26780, 27105, 26890, 27250],
+                    borderColor: '#f97316',
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        };
+
+        new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HedgePass Pro</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="{% static 'js/chat.js' %}" defer></script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script src="{% static 'js/landing.js' %}" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <!-- Custom logo code -->
+            <h1><i class="fas fa-chart-bar"></i> HedgePass Pro</h1>
+            <p>Smart Hedging Solutions for Prop Firm Challenges</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#benefits">Benefits</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <h2>Professional Prop Firm Challenge Hedging</h2>
+            <div class="cta-buttons">
+                <a href="{% url 'signup' %}" class="button">New Client Sign Up</a>
+                <a href="{% url 'client_area' %}" class="button secondary">Client Area Login</a>
+            </div>
+            <div class="key-benefits">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚫💻</div>
+                    <h3>No VPS Required</h3>
+                    <p>Fully compliant with prop firm regulations. All trade management is handled securely through our cloud-based platform - no local installations needed.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">👨💻⚖️</div>
+                    <h3>Flexible Trading Modes</h3>
+                    <p>Choose between our automated hedging solution or manual trading interface. Maintain full control while we handle the compliance aspects.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📉💸</div>
+                    <h3>Cost-Efficient Strategy</h3>
+                    <p>Our algorithm minimizes commissions and swap fees through:
+                    <ul>
+                        <li>Low trade volume optimization</li>
+                        <li>Same-day position closure</li>
+                        <li>Smart collateral management</li>
+                    </ul>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">Do I need a VPS to use HedgePass Pro?<span class="toggle-icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>No, HedgePass Pro operates entirely through our secure cloud platform. We've designed our system specifically to comply with prop firm regulations regarding VPS usage.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How does your hedging strategy reduce costs?<span class="toggle-icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Our algorithm is optimized to:
+                        <ul>
+                            <li>Maintain low trade volume (2-5 positions daily)</li>
+                            <li>Close all positions before market close to avoid swaps</li>
+                            <li>Use commission-efficient execution methods</li>
+                        </ul>
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Can I switch between manual and automated modes?<span class="toggle-icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Yes, you can switch modes at any time through your client dashboard. Your account settings will be preserved when switching between modes.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Can I use your system on brokers that do not permit algo trading?<span class="toggle-icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Yes, you can use our Algo on propfirms that do not allow algo trading. Our system mimics manual entries and does not leave any traces of algo trading.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What happens if I need help outside business hours?<span class="toggle-icon">+</span></button>
+                    <div class="faq-answer">
+                        <p>Our live chat support is available 24/7 for urgent issues. For non-urgent matters, we typically respond within 12 hours.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Disclaimer Section -->
+        <section class="risk-disclaimer">
+            <h3>Risk Disclaimer</h3>
+            <div class="disclaimer-content">
+                <p>Trading in financial instruments carries a high level of risk and may not be suitable for all investors. Before deciding to trade, you should carefully consider your investment objectives, level of experience, and risk appetite.</p>
+                <p>HedgePass Pro provides execution services only and does not manage accounts or give trading advice. Past performance is not indicative of future results. The possibility exists that you could sustain a loss of some or all of your initial investment.</p>
+                <p>Our hedging solutions are designed to help manage risk, but cannot eliminate risk entirely. You should be aware of all the risks associated with trading and seek advice from an independent financial advisor if you have any doubts.</p>
+                <p>By using our services, you acknowledge that you understand these risks and that you are solely responsible for the outcomes of your trading decisions.</p>
+            </div>
+        </section>
+
+        <!-- Social Media Links -->
+        <div class="social-media">
+            <h3>Connect With Us</h3>
+            <div class="social-links">
+                <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+
+        <!-- Live Chat Widget -->
+        <div id="chat-widget" class="chat-widget">
+            <div class="chat-header">
+                <h4>Support Center</h4>
+                <button id="close-chat" class="chat-close">×</button>
+            </div>
+            <div class="chat-body">
+                <div class="chat-messages">
+                    <div class="chat-bot-message">
+                        <p>Hello! How can we help you today?</p>
+                    </div>
+                </div>
+                <div class="quick-questions">
+                    <button class="quick-question">VPS Requirements</button>
+                    <button class="quick-question">Account Setup</button>
+                    <button class="quick-question">Hedging Strategy</button>
+                    <button class="quick-question">Billing Questions</button>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Type your question...">
+                <button class="send-button">Send</button>
+            </div>
+            <div class="live-agent-option">
+                <p>Can't find what you need? <button id="request-agent">Talk to a live agent</button></p>
+            </div>
+        </div>
+        <button id="chat-toggle" class="chat-toggle-button">
+            <i class="fas fa-comments"></i> Support
+        </button>
+    </div>
+</body>
+</html>

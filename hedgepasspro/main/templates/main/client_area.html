@@ -1,0 +1,114 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Client Dashboard - HedgePassPro{% endblock %}
+
+{% block header %}
+<header>
+    <div class="container">
+        <h1><i class="fas fa-chart-bar"></i> HedgePass Pro</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'account_management' %}" class="nav-link">
+                    <i class="fas fa-users-cog"></i> Account Management
+                </a></li>
+                <li><a href="{% url 'portfolio_performance' %}" class="nav-link">
+                    <i class="fas fa-chart-line"></i> Portfolio Performance
+                </a></li>
+                <li><a href="{% url 'settings' %}" class="nav-link">
+                    <i class="fas fa-cog"></i> Settings
+                </a></li>
+                <li><a href="{% url 'logout' %}" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="account-manager">
+    <div class="section-header">
+        <h2>Account Pairs</h2>
+        <div class="pair-controls">
+            <a href="{% url 'account_management' %}" class="button">
+                <i class="fas fa-plus"></i> New Pair
+            </a>
+            <span class="pair-counter">Active: {{ account_pairs.count }}/10</span>
+        </div>
+    </div>
+    
+    <div id="pairsContainer" class="pairs-container">
+        {% if account_pairs %}
+            {% for pair in account_pairs %}
+            <div class="account-pair">
+                <div class="pair-header">
+                    <div class="pair-title">
+                        <h3><i class="fas fa-link"></i> Pair {{ pair.id }}</h3>
+                        <div class="status-indicator">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Active</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="accounts-wrapper">
+                    <div class="account-box prop-account">
+                        <h4>
+                            <i class="fas {% if pair.prop_account_trading_type == 'algo' %}fa-robot{% else %}fa-user{% endif %}"></i>
+                            Prop Account
+                        </h4>
+                        <div class="account-metrics">
+                            <div class="metric">
+                                <label>Account Number</label>
+                                <span>{{ pair.prop_account_login }}</span>
+                            </div>
+                            <div class="metric">
+                                <label>Server</label>
+                                <span>{{ pair.prop_account_server }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="account-box live-account">
+                        <h4>
+                            <i class="fas fa-exchange-alt"></i>
+                            Live Account
+                        </h4>
+                        <div class="account-metrics">
+                            <div class="metric">
+                                <label>Account Number</label>
+                                <span>{{ pair.live_account_login }}</span>
+                            </div>
+                            <div class="metric">
+                                <label>Server</label>
+                                <span>{{ pair.live_account_server }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pair-actions">
+                    <a href="{% url 'performance' pair.id %}" class="button">
+                        <i class="fas fa-chart-line"></i> Performance
+                    </a>
+                    <form method="post" action="{% url 'delete-pair' pair.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="button danger" onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-link-slash"></i>
+                <h3>No Active Pairs</h3>
+                <p>Connect your first account pair to begin</p>
+                <a href="{% url 'account_management' %}" class="button">
+                    <i class="fas fa-plus"></i> Add New Pair
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

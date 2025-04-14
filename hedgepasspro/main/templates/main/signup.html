@@ -1,0 +1,37 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="container">
+    <section class="account-form">
+        <h2>New Client Registration</h2>
+        <form method="post" id="registration-form">
+            {% csrf_token %}
+            <div class="form-section">
+                <h3>Account Information</h3>
+                <div class="form-group">
+                    <label for="id_email">Email Address</label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="id_phone">Phone Number</label>
+                    {{ form.phone }}
+                    {{ form.phone.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password1">Password</label>
+                    {{ form.password1 }}
+                    {{ form.password1.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password2">Confirm Password</label>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </div>
+            </div>
+            <button type="submit" class="button">Create Account</button>
+        </form>
+        <p class="auth-link">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </section>
+</div>
+{% endblock %}

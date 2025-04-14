@@ -1,0 +1,119 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Settings | HedgePass Pro{% endblock %}
+
+{% block header %}
+<header>
+    <div class="container">
+        <h1>Platform Settings</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'client_area' %}"><i class="fas fa-arrow-left"></i> Back to Dashboard</a></li>
+                <li><a href="{% url 'account_management' %}">Account Management</a></li>
+                <li><a href="{% url 'performance' %}">Performance</a></li>
+                <li><a href="#notifications">Notifications</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section id="platform-settings">
+        <h2>Your Preferences</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="settings-card">
+                <h3>Notification Settings</h3>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" name="email_alerts" {% if settings.email_alerts %}checked{% endif %}>
+                        Email Alerts
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" name="sms_notifications" {% if settings.sms_notifications %}checked{% endif %}>
+                        SMS Notifications
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" name="desktop_notifications" {% if settings.desktop_notifications %}checked{% endif %}>
+                        Desktop Notifications
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Security Settings</h3>
+                <div class="setting-item">
+                    <label>Two-Factor Authentication</label>
+                    <select name="two_factor_method">
+                        <option value="disabled" {% if settings.two_factor_method == 'disabled' %}selected{% endif %}>Disabled</option>
+                        <option value="email" {% if settings.two_factor_method == 'email' %}selected{% endif %}>Email</option>
+                        <option value="authenticator" {% if settings.two_factor_method == 'authenticator' %}selected{% endif %}>Authenticator App</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <label>Session Timeout</label>
+                    <select name="session_timeout">
+                        <option value="15" {% if settings.session_timeout == 15 %}selected{% endif %}>15 minutes</option>
+                        <option value="30" {% if settings.session_timeout == 30 %}selected{% endif %}>30 minutes</option>
+                        <option value="60" {% if settings.session_timeout == 60 %}selected{% endif %}>1 hour</option>
+                        <option value="240" {% if settings.session_timeout == 240 %}selected{% endif %}>4 hours</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="settings-card">
+                <h3>Save Changes</h3>
+                <div class="setting-item">
+                    <button type="submit" class="button">Save Settings</button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="settings-card danger-zone">
+            <h3>Danger Zone</h3>
+            <div class="setting-item">
+                <button class="button warning" onclick="confirmDeleteAccount()">
+                    <i class="fas fa-trash-alt"></i> Delete Account
+                </button>
+                <p class="warning-text">This will permanently delete all your data</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+function confirmDeleteAccount() {
+    if(confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        fetch('{% url "delete_account" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if(response.ok) {
+                window.location.href = '{% url "landing" %}';
+            } else {
+                alert('Error deleting account');
+            }
+        });
+    }
+}
+</script>
+{% endblock %}

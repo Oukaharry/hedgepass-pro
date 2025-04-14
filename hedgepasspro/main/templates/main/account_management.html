@@ -1,0 +1,284 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Account Management - HedgePassPro{% endblock %}
+
+{% block header %}
+<header>
+    <div class="container">
+        <h1>Account Management</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'client_area' %}"><i class="fas fa-arrow-left"></i> Back</a></li>
+                <li><a href="{% url 'settings' %}">Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="pair-creation">
+    <h2>Connect New Account Pair</h2>
+    
+    <div class="instructions-panel">
+        <h3><i class="fas fa-info-circle"></i> Connection Instructions</h3>
+        <ol>
+            <li>Enter your Prop Firm MT5 account details on the left</li>
+            <li>Select your trading type (Manual/Algo)</li>
+            <li>Enter your Live Broker MT5 account details on the right</li>
+            <li>Click "Connect" for each account and wait for confirmation</li>
+            <li>Once both accounts are connected, click "Join Accounts"</li>
+        </ol>
+        <div class="important-note">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Important: Make sure to use correct MT5 login credentials.</span>
+        </div>
+    </div>
+
+    <form method="post" id="pair-form" action="{% url 'account_management' %}">
+        {% csrf_token %}
+        <div class="pairing-interface">
+            <div class="account-column prop-account">
+                <h3><i class="fas fa-building"></i> Prop Firm Account</h3>
+                <div class="account-form">
+                    <div class="form-group">
+                        <label for="prop-login">MT5 Login</label>
+                        <input type="number" id="prop-login" name="prop_login" placeholder="Account number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-password">Password</label>
+                        <input type="password" id="prop-password" name="prop_password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-server">Server</label>
+                        <input type="text" id="prop-server" name="prop_server" placeholder="Server name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-trading-type">Trading Type</label>
+                        <select id="prop-trading-type" name="prop_trading_type" class="form-control" required>
+                            <option value="manual">Manual Trading</option>
+                            <option value="algo">Algo Trading</option>
+                        </select>
+                    </div>
+                    <button type="button" class="button connect-btn" id="prop-connect-btn">
+                        <i class="fas fa-plug"></i> Connect
+                    </button>
+                    <div class="connection-status" id="prop-status">Not connected</div>
+                </div>
+            </div>
+
+            <div class="pair-controls">
+                <button type="submit" class="button join-btn" id="join-btn" disabled>
+                    <i class="fas fa-link"></i> Join Accounts
+                </button>
+            </div>
+
+            <div class="account-column live-account">
+                <h3><i class="fas fa-exchange-alt"></i> Live Broker Account</h3>
+                <div class="account-form">
+                    <div class="form-group">
+                        <label for="live-login">MT5 Login</label>
+                        <input type="number" id="live-login" name="live_login" placeholder="Account number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="live-password">Password</label>
+                        <input type="password" id="live-password" name="live_password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="live-server">Server</label>
+                        <input type="text" id="live-server" name="live_server" placeholder="Server name" required>
+                    </div>
+                    <button type="button" class="button connect-btn" id="live-connect-btn">
+                        <i class="fas fa-plug"></i> Connect
+                    </button>
+                    <div class="connection-status" id="live-status">Not connected</div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="active-pairs">
+        <h3>Active Account Pairs</h3>
+        <div class="pairs-list" id="pairs-list">
+            {% for pair in account_pairs %}
+            <div class="pair-item">
+                <div class="pair-info">
+                    <div class="account-badge prop">
+                        <i class="fas {% if pair.prop_trading_type == 'algo' %}fa-robot{% else %}fa-user{% endif %}"></i>
+                        Prop: {{ pair.prop_login }}
+                    </div>
+                    <div class="account-badge live">Live: {{ pair.live_login }}</div>
+                    <small>Connected: {{ pair.created_at|date:"Y-m-d" }}</small>
+                </div>
+                <div class="pair-actions">
+                    <a href="{% url 'performance' pair.id %}" class="button small">
+                        <i class="fas fa-chart-line"></i> Stats
+                    </a>
+                    <form method="post" action="{% url 'delete-pair' pair.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="button small danger" onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <p class="empty-state">No active pairs found</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const propConnectBtn = document.getElementById('prop-connect-btn');
+    const liveConnectBtn = document.getElementById('live-connect-btn');
+    const joinBtn = document.getElementById('join-btn');
+    let connectedAccounts = { prop: false, live: false };
+
+    // Connect button handlers
+    [propConnectBtn, liveConnectBtn].forEach(btn => {
+        btn.addEventListener('click', function() {
+            const type = this.id.includes('prop') ? 'prop' : 'live';
+            const login = document.getElementById(`${type}-login`).value;
+            const password = document.getElementById(`${type}-password`).value;
+            const server = document.getElementById(`${type}-server`).value;
+            const statusElement = document.getElementById(`${type}-status`);
+
+            if (!login || !password || !server) {
+                alert(`Please fill all ${type} account fields`);
+                return;
+            }
+
+            statusElement.textContent = "Connecting...";
+            statusElement.className = "connection-status connecting";
+
+            // Simulate connection (replace with actual API call)
+            setTimeout(() => {
+                connectedAccounts[type] = true;
+                statusElement.textContent = "Connected";
+                statusElement.className = "connection-status connected";
+                
+                if (connectedAccounts.prop && connectedAccounts.live) {
+                    joinBtn.disabled = false;
+                }
+            }, 1000);
+        });
+    });
+
+    // Form submission handler
+    document.getElementById('pair-form').addEventListener('submit', function(e) {
+        if (!connectedAccounts.prop || !connectedAccounts.live) {
+            e.preventDefault();
+            alert('Please connect both accounts before joining');
+        }
+    });
+});
+</script>
+
+<style>
+.pairing-interface {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+.account-column {
+    width: 45%;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.prop-account {
+    background-color: #fff7ed;
+    border-left: 4px solid #f97316;
+}
+
+.live-account {
+    background-color: #f0fdf4;
+    border-left: 4px solid #22c55e;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.connection-status {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.connection-status.connecting {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+
+.connection-status.connected {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.pair-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 1rem;
+}
+
+.pairs-list {
+    margin-top: 2rem;
+}
+
+.pair-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.account-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    margin-right: 0.5rem;
+}
+
+.account-badge.prop {
+    background-color: #ffedd5;
+    color: #9a3412;
+}
+
+.account-badge.live {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.pair-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+</style>
+{% endblock %}

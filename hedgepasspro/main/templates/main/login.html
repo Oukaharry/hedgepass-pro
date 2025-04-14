@@ -1,0 +1,15 @@
+{% extends "main/landing.html" %}
+
+{% block content %}
+<div class="container">
+    <section class="account-form">
+        <h2>Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+    </section>
+</div>
+{% endblock %}

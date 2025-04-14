@@ -1,0 +1,1217 @@
+/* styles.css */
+/* Base Styles */
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --background-light: #f8fafc;
+    --text-color: #1e293b;
+    --success-color: #22c55e;
+    --error-color: #ef4444;
+    --border-radius: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+    background-color: var(--background-light);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Header & Navigation */
+header {
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem 0;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+nav a:hover {
+    opacity: 0.9;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.button:hover {
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+.button.secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Client Area Specific */
+.account-pair-manager {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.pair-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.account-pair {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.account-pair:hover {
+    transform: translateX(4px);
+}
+
+.pair-form {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.status-select {
+    padding: 0.5rem;
+    border-color: #cbd5e1;
+}
+
+/* Signup Page */
+.account-form {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--border-radius);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pair-form {
+        grid-template-columns: 1fr;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+/* Add to existing CSS */
+.key-benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.benefit-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.benefit-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.info-box {
+    background: #f1f5f9;
+    padding: 1.5rem;
+    border-left: 4px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+}
+
+.info-box ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.info-box li {
+    margin-bottom: 0.75rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.info-box li:before {
+    content: "•";
+    color: var(--primary-color);
+    position: absolute;
+    left: -1rem;
+}
+
+.important-note {
+    background: #e0f2fe;
+    border-color: var(--primary-color);
+}
+
+/* Manual Trading Callout */
+.manual-option {
+    background: #f0fdf4;
+    border: 2px solid #22c55e;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin: 1.5rem 0;
+}
+
+/* FAQ Styles */
+.faq-section {
+    margin: 4rem 0;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.faq-item {
+    margin-bottom: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.faq-question {
+    width: 100%;
+    padding: 1.5rem;
+    text-align: left;
+    background: white;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.faq-question:hover {
+    background: #f8fafc;
+}
+
+.faq-answer {
+    padding: 0 1.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background: #f8fafc;
+}
+
+.faq-answer p {
+    padding: 1rem 0;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.faq-item.active .toggle-icon {
+    transform: rotate(45deg);
+}
+
+.toggle-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s;
+}
+
+/* Social Media Styles */
+.social-media {
+    text-align: center;
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.social-link {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    transition: transform 0.2s;
+}
+
+.social-link:hover {
+    transform: translateY(-3px);
+}
+
+/* Chat Widget Styles */
+.chat-toggle-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 1000;
+}
+
+.chat-toggle-button i {
+    font-size: 1.2rem;
+}
+
+.chat-widget {
+    position: fixed;
+    bottom: 5rem;
+    right: 2rem;
+    width: 350px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    max-height: 70vh;
+}
+
+.chat-widget.active {
+    display: flex;
+}
+
+.chat-header {
+    padding: 1rem;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.chat-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.chat-body {
+    padding: 1rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.chat-messages {
+    margin-bottom: 1rem;
+}
+
+.chat-bot-message {
+    background: #f1f5f9;
+    padding: 0.75rem 1rem;
+    border-radius: 0 var(--border-radius) var(--border-radius) var(--border-radius);
+    margin-bottom: 0.5rem;
+    max-width: 80%;
+}
+
+.quick-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.quick-question {
+    background: #e2e8f0;
+    border: none;
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.quick-question:hover {
+    background: #cbd5e1;
+}
+
+.chat-input {
+    display: flex;
+    padding: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.send-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    padding: 0 1rem;
+    cursor: pointer;
+}
+
+.live-agent-option {
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+#request-agent {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Risk Disclaimer Styles */
+.risk-disclaimer {
+    margin: 4rem 0 2rem;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--error-color);
+}
+
+.risk-disclaimer h3 {
+    color: var(--error-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.disclaimer-content {
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.disclaimer-content p {
+    margin-bottom: 1rem;
+}
+
+/* Account Management Styles */
+.account-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.account-list {
+    margin: 1.5rem 0;
+}
+
+.account-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.account-type {
+    font-weight: 600;
+}
+
+.account-detail {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.account-status {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50px;
+}
+
+.account-status.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Performance Metrics Styles */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.metric-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+}
+
+.metric-value.positive {
+    color: var(--success-color);
+}
+
+.metric-change {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.performance-chart {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-top: 2rem;
+}
+
+.chart-placeholder {
+    margin-top: 1rem;
+    background: #f1f5f9;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+}
+
+/* Settings Styles */
+.settings-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.setting-item {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.setting-item label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.danger-zone {
+    border: 2px solid var(--error-color);
+}
+
+.warning-text {
+    color: var(--error-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.button.warning {
+    background: var(--error-color);
+}
+
+.button.warning:hover {
+    background: #b91c1c;
+}
+
+/* Navigation Enhancements */
+nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    nav ul {
+        flex-direction: column;
+    }
+}
+
+/* Chart Styles */
+.chart-container {
+    margin: 1.5rem 0;
+    height: 400px;
+    position: relative;
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+}
+
+.prop-color {
+    background: linear-gradient(to right, #22c55e, #eab308, #f97316, #ef4444);
+}
+
+.live-color {
+    background: linear-gradient(to right, #22c55e, #166534);
+}
+
+/* Chart.js tooltip customization */
+.chartjs-tooltip {
+    background: rgba(30, 41, 59, 0.9) !important;
+    border-radius: 4px !important;
+    color: white !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.chartjs-tooltip-key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+}
+
+/* Account Pairing Styles */
+.pairing-interface {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+    align-items: flex-start;
+}
+
+.account-column {
+    flex: 1;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.prop-account {
+    border-top: 4px solid #f97316;
+}
+
+.live-account {
+    border-top: 4px solid #22c55e;
+}
+
+.pair-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 1rem;
+}
+
+.join-btn {
+    background: #2563eb;
+    padding: 0.75rem 1.5rem;
+    white-space: nowrap;
+}
+
+.join-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+}
+
+.pair-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.performance-btn {
+    background: #22c55e;
+}
+
+.connection-status {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.connection-status.connecting {
+    background: #fef9c3;
+    color: #713f12;
+}
+
+.connection-status.connected {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.paired-performance {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-top: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pairing-interface {
+        flex-direction: column;
+    }
+    
+    .pair-controls {
+        flex-direction: row;
+        padding: 1rem 0;
+    }
+}
+
+/* Active Pairs List */
+.active-pairs {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-top: 2rem;
+}
+
+.pairs-list {
+    margin-top: 1.5rem;
+}
+
+.pair-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    transition: all 0.2s;
+}
+
+.pair-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.pair-info {
+    flex: 1;
+}
+
+.pair-accounts {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.account-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.account-badge.prop {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.account-badge.live {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pair-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.pair-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+    background: #f8fafc;
+    border-radius: var(--border-radius);
+}
+
+.button {
+    font-size: 0.875rem; /* Reduce font size */
+    line-height: 1.2; /* Adjust line height for better alignment */
+    padding: 0.5rem 1rem; /* Maintain padding */
+}
+
+.button.small {
+    font-size: 0.75rem; /* Smaller font size for small buttons */
+    padding: 0.4rem 0.8rem; /* Adjust padding for small buttons */
+}
+
+.button.secondary {
+    font-size: 0.875rem; /* Adjust font size for secondary buttons */
+}
+
+.pair-actions .button {
+    flex: 1; /* Ensure buttons in pair-actions maintain width */
+}
+
+.account-pair {
+    display: flex;
+    justify-content: space-between; /* Space between account details and buttons */
+    align-items: center; /* Align items vertically */
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.pair-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1; /* Allow details to take up remaining space */
+}
+
+.pair-actions {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 0.5rem;
+    margin-left: 1rem; /* Add spacing between details and buttons */
+    align-items: flex-end; /* Align buttons to the right */
+}
+
+/* ...existing code... */
+
+.hero {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping if the screen is too small */
+    justify-content: space-between; /* Adds spacing between items */
+    align-items: center; /* Aligns items vertically */
+    gap: 20px; /* Adds spacing between items */
+}
+
+.hero .cta-buttons,
+.hero .key-benefits {
+    display: flex;
+    flex-direction: row; /* Ensures items inside are horizontal */
+    gap: 20px; /* Adds spacing between buttons or cards */
+}
+
+.key-benefits .benefit-card {
+    flex: 1; /* Ensures all cards take equal space */
+    text-align: center; /* Centers text inside cards */
+}
+
+/* Add responsive design for smaller screens */
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column; /* Stacks items vertically on smaller screens */
+    }
+}
+
+/* ...existing code... */
+
+.faq-section {
+    margin: 0 auto; /* Centers the section horizontally */
+    max-width: 800px; /* Optional: Limits the width for better readability */
+    text-align: center; /* Centers the text inside the section */
+    padding: 20px; /* Adds spacing around the section */
+}
+
+.faq-container {
+    display: flex;
+    flex-direction: column; /* Ensures FAQ items stack vertically */
+    gap: 15px; /* Adds spacing between FAQ items */
+}
+
+.main-header {
+    background: var(--primary-color);
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.logo {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.tagline {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-top: 0.5rem;
+}
+
+.primary-nav {
+    background: var(--secondary-color);
+    padding: 1rem 0;
+}
+
+.primary-nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.primary-nav a {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.hero-section {
+    margin: 3rem 0;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.3;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.benefit-card .benefit-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.disclaimer-title {
+    color: var(--error-color);
+    margin-bottom: 1.5rem;
+}
+
+.social-title {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .primary-nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
+
+.trading-visuals {
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    background: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .trading-visuals {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-widget, .equity-curves {
+    background: #242424;
+    padding: 1rem;
+    border-radius: 6px;
+    min-height: 450px;
+}
+
+.chart-widget h3, .equity-curves h3 {
+    color: #fff;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.curves-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+}
+
+#tradingview_chart {
+    height: 400px;
+    width: 100%;
+}
+
+/* ...existing styles... */
+
+.trading-visuals {
+    margin: 1rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: #1a1a1a;
+    padding: 0.75rem;
+    border-radius: 6px;
+    height: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mini-chart, .mini-equity {
+    background: #242424;
+    border-radius: 4px;
+    height: 100%;
+    overflow: hidden;
+}
+
+#tradingview_chart, .mini-equity canvas {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    .trading-visuals {
+        height: 150px;
+    }
+}
+
+.trading-visuals {
+    margin: 1rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    background: #1a1a1a;
+    padding: 0.75rem;
+    border-radius: 6px;
+    height: 200px;
+}
+
+.mini-chart, .mini-equity, .bull-bear-battle {
+    background: #242424;
+    border-radius: 4px;
+    height: 100%;
+    overflow: hidden;
+}
+
+#tradingview_chart, .mini-equity canvas, #battleAnimation {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    .trading-visuals {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .mini-chart, .mini-equity, .bull-bear-battle {
+        height: 150px;
+    }
+}
+
+.forex-news-feed {
+    background: #1a1a1a;
+    border-radius: 6px;
+    height: 50px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#battleAnimation {
+    width: 100%;
+    height: 100%;
+}
+
+.trading-visuals {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    background: #1a1a1a;
+    padding: 1rem;
+    border-radius: 8px;
+    height: 300px;
+}
+
+.chart-simulation, .metrics-computation {
+    background: #242424;
+    border-radius: 6px;
+    height: 100%;
+    overflow: hidden;
+}
+
+#propChart, #liveChart {
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .trading-visuals {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .chart-simulation, .metrics-computation {
+        height: 200px;
+    }
+}
+/* Font Awesome for icons (add to head of HTML) */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
