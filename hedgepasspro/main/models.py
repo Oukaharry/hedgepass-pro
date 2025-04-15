@@ -1,67 +1,89 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.utils.translation import gettext_lazy as _
-from django_cryptography.fields import encrypt
-from main.utils.baseconv import BaseConverter  
+from django.conf import settings
+from cryptography.fernet import Fernet
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError(_('The Email must be set'))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_superuser(self, email, password, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
-        return self.create_user(email, password, **extra_fields)
-
-class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(_('email address'), unique=True)
-    phone = models.CharField(_('phone number'), max_length=20, blank=True)
-    two_factor_enabled = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
-
-    objects = CustomUserManager()
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+class User(AbstractUser):
+    # Add custom fields if needed
+    is_premium = models.BooleanField(default=False)
+    mt5_license = models.CharField(max_length=100, blank=True)
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+        app_label = 'main'  # Crucial for migrations
 
     def __str__(self):
-        return self.email
+        return self.username
+
 
 class AccountPair(models.Model):
-    TRADING_TYPES = [('manual', 'Manual'), ('algo', 'Algorithmic')]
+    LIVE = 'LIVE'
+    PROP = 'PROP'
+    ACCOUNT_TYPES = (
+        (LIVE, 'Live Account'),
+        (PROP, 'Prop Firm Account'),
+    )
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='account_pairs')
-    prop_account_login = models.CharField(max_length=100)
-    prop_account_password = encrypt(models.CharField(max_length=100))
-    prop_account_server = models.CharField(max_length=100)
-    prop_account_trading_type = models.CharField(max_length=10, choices=TRADING_TYPES)
-    live_account_login = models.CharField(max_length=100)
-    live_account_password = encrypt(models.CharField(max_length=100))
-    live_account_server = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    account_type = models.CharField(
+        max_length=4,
+        choices=ACCOUNT_TYPES
+    )
+    account_number = models.IntegerField()
+    password = models.CharField(max_length=255)
+    server = models.CharField(max_length=100)
+    pair_number = models.IntegerField(default=1)
     is_active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f"Pair {self.id} - {self.prop_account_login}"
-
-class PerformanceData(models.Model):
-    pair = models.ForeignKey(AccountPair, on_delete=models.CASCADE, related_name='performance_data')
-    timestamp = models.DateTimeField(auto_now_add=True)
-    live_equity = models.DecimalField(max_digits=12, decimal_places=2)
-    hedge_equity = models.DecimalField(max_digits=12, decimal_places=2)
-    efficiency = models.DecimalField(max_digits=5, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-timestamp']
+        unique_together = ('user', 'account_type', 'pair_number')
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only encrypt on first save
+            cipher = Fernet(settings.MT5_ENCRYPTION_KEY)
+            self.password = cipher.encrypt(self.password.encode()).decode()
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.get_account_type_display()} #{self.account_number}"
+
+class MT5Account(models.Model):
+    ACCOUNT_TYPES = (
+        ('LIVE', 'Live Account'),
+        ('PROP', 'Prop Firm Account'),
+    )
+    
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name='user'
+    )
+    account_type = models.CharField(max_length=4, choices=ACCOUNT_TYPES)
+    account_number = models.IntegerField()
+    password = models.CharField(max_length=255)  # Encrypted
+    server = models.CharField(max_length=100)
+    pair_number = models.IntegerField(default=1)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'account_type', 'pair_number')
+        verbose_name = 'MT5 Account'
+        verbose_name_plural = 'MT5 Accounts'
+    
+    def save(self, *args, **kwargs):
+        # Encrypt password before saving
+        if not self.pk or 'password' in kwargs.get('update_fields', []):
+            cipher = Fernet(settings.MT5_ENCRYPTION_KEY)
+            self.password = cipher.encrypt(self.password.encode()).decode()
+        super().save(*args, **kwargs)
+    
+    def get_password(self):
+        cipher = Fernet(settings.MT5_ENCRYPTION_KEY)
+        return cipher.decrypt(self.password.encode()).decode()
+    
+    def __str__(self):
+        return f"{self.get_account_type_display()} #{self.account_number} (Pair {self.pair_number})"

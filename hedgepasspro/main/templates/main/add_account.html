@@ -1,0 +1,49 @@
+{% extends "hedgepasspro/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    
+    <h2>Connect MT5 Account</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label">Account Type</label>
+            <select name="account_type" class="form-select" required>
+                <option value="">Select type</option>
+                <option value="LIVE">Live Account</option>
+                <option value="PROP">Prop Firm Account</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Account Number</label>
+            <input type="number" name="account_number" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Server</label>
+            <input type="text" name="server" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Pair Number (1-10)</label>
+            <select name="pair_number" class="form-select" required>
+                {% for i in "1234567890" %}
+                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Connect</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,28 +1,21 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, AccountPair
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    phone = forms.CharField(max_length=20, required=False)
-
     class Meta:
         model = User
-        fields = ("email", "phone", "password1", "password2")
+        fields = ('username', 'email')  # Add custom fields if needed
+
 
 class AccountPairForm(forms.ModelForm):
     class Meta:
         model = AccountPair
-        fields = [
-            'prop_account_login', 
-            'prop_account_password',
-            'prop_account_server',
-            'prop_account_trading_type',
-            'live_account_login',
-            'live_account_password',
-            'live_account_server'
-        ]
+        fields = ['account_type', 'account_number', 'password', 'server', 'pair_number']
         widgets = {
-            'prop_account_password': forms.PasswordInput(),
-            'live_account_password': forms.PasswordInput(),
+            'password': forms.PasswordInput(),
         }

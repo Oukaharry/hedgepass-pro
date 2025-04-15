@@ -4,6 +4,51 @@ from django.contrib.auth import login, logout
 from django.http import JsonResponse
 from .forms import CustomUserCreationForm, AccountPairForm
 from .models import AccountPair
+from .models import MT5Account
+from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
+
+
+def index(request):
+    return render(request, 'main/landing.html')  
+
+def landing(request):
+    """Landing page view"""
+    return render(request, 'main/landing.html')  # Keep existing template
+
+def dashboard(request):
+    """Dashboard view (previous index)"""
+    return render(request, 'main/landing.html')
+
+
+@login_required
+def add_account(request):
+    if request.method == 'POST':
+        try:
+            account = MT5Account(
+                user=request.user,
+                account_type=request.POST.get('account_type'),
+                account_number=request.POST.get('account_number'),
+                password=request.POST.get('password'),  # Will be encrypted in save()
+                server=request.POST.get('server'),
+                pair_number=request.POST.get('pair_number')
+            )
+            account.save()
+            return redirect('landing')
+        except Exception as e:
+            return render(request, 'hedgepasspro/add_account.html', {
+                'error': str(e)
+            })
+    
+    return render(request, 'hedgepasspro/add_account.html')
+
+@login_required
+def view_pairs(request):
+    accounts = MT5Account.objects.filter(user=request.user).order_by('pair_number')
+    return render(request, 'hedgepasspro/pairs.html', {
+        'accounts': accounts,
+        'pair_range': range(1, 11)  # For 10 possible pairs
+    })
 
 def landing(request):
     return render(request, 'main/landing.html')
@@ -25,10 +70,11 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('client_area')
+            return redirect('main:dashboard')
     else:
         form = CustomUserCreationForm()
     return render(request, 'main/signup.html', {'form': form})
+
 
 @login_required
 def client_area(request):
