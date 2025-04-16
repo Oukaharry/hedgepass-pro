@@ -64,7 +64,7 @@ def login_view(request):
         form = CustomUserCreationForm()
     return render(request, 'main/login.html', {'form': form})
 
-def signup(request):
+def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
